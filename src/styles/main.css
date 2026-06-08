@@ -156,9 +156,11 @@ html, body {
 }
 
 /* ─── FUTURE text — back (filled, behind robot) ──────── */
-/* Fixed pixel positions — NO individual transforms so they  */
-/* never drift relative to each other when parent scales.    */
-/* Centered in 1440px: (1440 - 1322) / 2 = 59px             */
+/* SVG natural sizes:                                        */
+/*   back  = 1322 × 312  → centered: (1440-1322)/2 = 59px  */
+/*   front = 1330 × 320  → the outline extends 4px on every */
+/*           side beyond the fill, so offset by -4px each.  */
+/*           left = 59 - 4 = 55px, top = 319 - 4 = 315px   */
 
 .future-back {
   position: absolute;
@@ -175,7 +177,6 @@ html, body {
 .future-front img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
   display: block;
 }
 
@@ -210,14 +211,14 @@ html, body {
 }
 
 /* ─── FUTURE text — front (outline, over robot) ──────── */
-/* Same left/width as future-back — pixel-perfect overlay  */
+/* 1330×320 SVG, offset -4px each side to sit on the fill  */
 
 .future-front {
   position: absolute;
-  left: 59px;
-  top: 319px;
-  width: 1322px;
-  height: 312px;
+  left: 55px;
+  top: 315px;
+  width: 1330px;
+  height: 320px;
   z-index: 3;
   pointer-events: none;
   user-select: none;
