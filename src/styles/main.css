@@ -51,19 +51,34 @@ html, body {
 .landing {
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── HERO WRAPPER — clips the scaled stage ──────────── */
+
+.hero {
+  width: 100%;
   overflow: hidden;
+  position: relative;
+  /* height is set dynamically by JS */
 }
 
-/* ─── BACKGROUNDS ────────────────────────────────────── */
+/* ─── HERO STAGE — fixed 1440×889 design canvas ─────── */
+/*     JS applies transform:scale(vw/1440)               */
 
-.bg-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+.hero-stage {
+  position: relative;
+  width: 1440px;
+  height: 889px;
+  transform-origin: top left;
 }
+
+/* ─── BACKGROUNDS (inside hero-stage) ───────────────── */
 
 .bg-gradient-main {
+  position: absolute;
+  inset: 0;
+  height: 889px;
   background: linear-gradient(
     to bottom,
     #ED5402 0%,
@@ -71,11 +86,6 @@ html, body {
     #F69A67 88.462%,
     #ffffff 100%
   );
-  height: 889px;
-  top: 0;
-  left: 0;
-  right: 0;
-  position: absolute;
 }
 
 .bg-gradient-radial-red {
@@ -84,13 +94,14 @@ html, body {
   right: 0;
   top: 210px;
   height: 679px;
+  pointer-events: none;
   background: radial-gradient(
-    ellipse 100% 50% at 50% 50%,
-    rgba(237,26,2,1) 0%,
-    rgba(237,26,2,0.51) 65.865%,
-    rgba(237,26,2,0.12) 79.327%,
+    ellipse 50% 50% at 50% 50%,
+    rgba(237, 26, 2, 1)    0%,
+    rgba(237, 26, 2, 0.51) 65.865%,
+    rgba(237, 26, 2, 0.12) 79.327%,
     rgba(246,141,129,0.06) 89.663%,
-    rgba(255,255,255,0) 100%
+    rgba(255,255,255, 0)   100%
   );
 }
 
@@ -100,16 +111,17 @@ html, body {
   right: 0;
   top: 558px;
   height: 331px;
+  pointer-events: none;
   background: radial-gradient(
-    ellipse 100% 50% at 50% 50%,
-    rgba(237,221,2,1) 0%,
-    rgba(237,221,2,0.51) 48.558%,
-    rgba(237,221,2,0.12) 79.327%,
-    rgba(255,255,255,0) 100%
+    ellipse 50% 50% at 50% 50%,
+    rgba(237, 221, 2, 1)    0%,
+    rgba(237, 221, 2, 0.51) 48.558%,
+    rgba(237, 221, 2, 0.12) 79.327%,
+    rgba(255, 255, 255, 0)  100%
   );
 }
 
-/* ─── HEADER ─────────────────────────────────────────── */
+/* ─── HEADER (inside hero-stage) ────────────────────── */
 
 .header {
   position: absolute;
@@ -123,11 +135,10 @@ html, body {
   z-index: 100;
 }
 
+/* SVG has correct colors already — no filter needed */
 .logo-top__img {
   height: 74px;
   width: auto;
-  /* SVG is dark — invert to white for the orange background */
-  filter: brightness(0) invert(1);
 }
 
 .header__dots {
@@ -144,15 +155,8 @@ html, body {
   opacity: 0.85;
 }
 
-/* ─── HERO SCENE ─────────────────────────────────────── */
+/* ─── FUTURE text — back (filled, behind robot) ──────── */
 
-.hero {
-  position: relative;
-  width: 100%;
-  height: 889px;
-}
-
-/* FUTURE text — back (filled) */
 .future-back {
   position: absolute;
   left: 50%;
@@ -165,20 +169,21 @@ html, body {
   user-select: none;
 }
 
-.future-back img {
+.future-back img,
+.future-front img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 
-/* Floating robot + ship */
+/* ─── Robot + ship floating ──────────────────────────── */
+
 .robot-scene {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   top: 66px;
   width: 860px;
-  height: 860px;
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -190,7 +195,6 @@ html, body {
   height: 609px;
   object-fit: contain;
   animation: float var(--float-duration) ease-in-out infinite;
-  transform-origin: center bottom;
 }
 
 .robot-floor {
@@ -200,7 +204,8 @@ html, body {
   margin-top: -60px;
 }
 
-/* FUTURE text — front (outline) */
+/* ─── FUTURE text — front (outline, over robot) ──────── */
+
 .future-front {
   position: absolute;
   left: 50%;
@@ -211,12 +216,6 @@ html, body {
   z-index: 3;
   pointer-events: none;
   user-select: none;
-}
-
-.future-front img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
 }
 
 /* ─── FLOAT ANIMATION ────────────────────────────────── */
@@ -232,19 +231,22 @@ html, body {
 .bottom {
   position: relative;
   background: #ffffff;
-  padding: 40px 60px 60px;
+  padding: 40px 60px 80px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 24px;
 }
 
 .bottom__content {
   flex: 1;
+  min-width: 0;
 }
 
 .bottom__series {
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
   gap: 0;
   margin-bottom: 12px;
 }
@@ -252,43 +254,47 @@ html, body {
 .bottom__blip {
   font-family: var(--font-family);
   font-weight: var(--font-weight-extrabold);
-  font-size: 79.05px;
+  font-size: clamp(40px, 5.5vw, 79.05px);
   color: var(--color-dark);
   letter-spacing: 4.65px;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .bottom__number {
   font-family: var(--font-family);
   font-weight: var(--font-weight-black);
-  font-size: 74.286px;
+  font-size: clamp(40px, 5.16vw, 74.286px);
   color: var(--color-orange-primary);
   letter-spacing: -1.2381px;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .bottom__slash {
   font-family: var(--font-family);
   font-weight: var(--font-weight-light);
-  font-size: 64.381px;
+  font-size: clamp(32px, 4.47vw, 64.381px);
   color: var(--color-dark-muted);
   line-height: 1;
   margin: 0 4px;
+  white-space: nowrap;
 }
 
 .bottom__label {
   font-family: var(--font-family);
   font-weight: var(--font-weight-regular);
-  font-size: 28.167px;
+  font-size: clamp(16px, 1.96vw, 28.167px);
   color: var(--color-dark-muted);
   align-self: flex-end;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  white-space: nowrap;
 }
 
 .bottom__tagline {
   font-family: var(--font-family);
   font-weight: var(--font-weight-bold);
-  font-size: 30px;
+  font-size: clamp(16px, 2.08vw, 30px);
   color: var(--color-orange-primary);
   letter-spacing: 1.2px;
   line-height: normal;
@@ -298,64 +304,20 @@ html, body {
 .bottom__description {
   font-family: var(--font-family);
   font-weight: var(--font-weight-regular);
-  font-size: 24px;
+  font-size: clamp(14px, 1.67vw, 24px);
   color: var(--color-dark-muted);
-  line-height: 32px;
+  line-height: 1.4;
   max-width: 1170px;
 }
 
 /* ─── VERTICAL LOGO (bottom right) ──────────────────── */
 
 .logo-vertical {
-  position: absolute;
-  right: 40px;
-  bottom: 40px;
   flex-shrink: 0;
+  align-self: flex-end;
 }
 
 .logo-vertical__img {
-  width: 116px;
+  width: clamp(60px, 8.06vw, 116px);
   height: auto;
-}
-
-/* ─── RESPONSIVE ─────────────────────────────────────── */
-
-@media (max-width: 1440px) {
-  .future-back,
-  .future-front {
-    width: 91.8vw;
-  }
-  .robot-scene {
-    width: 59.7vw;
-  }
-  .robot-floating {
-    width: 100%;
-    height: auto;
-  }
-  .robot-floor {
-    width: 100%;
-    height: auto;
-  }
-}
-
-@media (max-width: 768px) {
-  .header {
-    padding: 24px 24px 0;
-  }
-  .logo-top__name { font-size: 32px; }
-  .logo-top__icon { width: 60px; height: 44px; }
-  .hero { height: auto; min-height: 500px; }
-  .bg-gradient-main { height: 600px; }
-  .bg-gradient-radial-red { top: 140px; height: 400px; }
-  .bg-gradient-radial-yellow { top: 360px; height: 200px; }
-  .future-back,
-  .future-front { top: 200px; height: auto; }
-  .robot-scene { top: 40px; width: 90vw; }
-  .bottom { padding: 24px 24px 80px; flex-direction: column; }
-  .bottom__blip { font-size: 48px; }
-  .bottom__number { font-size: 48px; }
-  .bottom__tagline { font-size: 20px; }
-  .bottom__description { font-size: 16px; line-height: 24px; }
-  .logo-vertical { right: 16px; bottom: 16px; }
-  .logo-vertical__text { font-size: 56px; }
 }

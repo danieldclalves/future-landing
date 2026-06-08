@@ -10,43 +10,45 @@ import floorPng from './assets/fixed floor.png';
 document.querySelector('#app').innerHTML = `
   <main class="landing">
 
-    <!-- Background layers -->
-    <div class="bg-gradient-main"></div>
-    <div class="bg-gradient-radial-red"></div>
-    <div class="bg-gradient-radial-yellow"></div>
+    <!-- Hero: fixed 1440×889 stage that scales to viewport width -->
+    <div class="hero">
+      <div class="hero-stage">
 
-    <!-- Header -->
-    <header class="header">
-      <img class="logo-top__img" src="${logoTopSvg}" alt="Blip Creative logo" />
-      <div class="header__dots" aria-hidden="true">
-        <span class="header__dot"></span>
-        <span class="header__dot"></span>
-        <span class="header__dot"></span>
-      </div>
-    </header>
+        <!-- Background layers -->
+        <div class="bg-gradient-main"></div>
+        <div class="bg-gradient-radial-red"></div>
+        <div class="bg-gradient-radial-yellow"></div>
 
-    <!-- Hero scene -->
-    <section class="hero" aria-label="Hero">
+        <!-- Header -->
+        <header class="header">
+          <img class="logo-top__img" src="${logoTopSvg}" alt="Blip Creative logo" />
+          <div class="header__dots" aria-hidden="true">
+            <span class="header__dot"></span>
+            <span class="header__dot"></span>
+            <span class="header__dot"></span>
+          </div>
+        </header>
 
-      <!-- FUTURE — behind the robot (filled) -->
-      <div class="future-back" aria-hidden="true">
-        <img src="${futureBackSvg}" alt="" />
-      </div>
+        <!-- FUTURE — behind the robot (filled) -->
+        <div class="future-back" aria-hidden="true">
+          <img src="${futureBackSvg}" alt="" />
+        </div>
 
-      <!-- Robot + ship floating -->
-      <div class="robot-scene">
-        <img class="robot-floating" src="${robotPng}" alt="Robot in spaceship" />
-        <img class="robot-floor" src="${floorPng}" alt="" aria-hidden="true" />
-      </div>
+        <!-- Robot + ship floating -->
+        <div class="robot-scene">
+          <img class="robot-floating" src="${robotPng}" alt="Robot in spaceship" />
+          <img class="robot-floor" src="${floorPng}" alt="" aria-hidden="true" />
+        </div>
 
-      <!-- FUTURE — in front of the robot (outline only) -->
-      <div class="future-front" aria-hidden="true">
-        <img src="${futureFrontSvg}" alt="FUTURE" />
-      </div>
+        <!-- FUTURE — in front of the robot (outline only) -->
+        <div class="future-front" aria-hidden="true">
+          <img src="${futureFrontSvg}" alt="FUTURE" />
+        </div>
 
-    </section>
+      </div><!-- /.hero-stage -->
+    </div><!-- /.hero -->
 
-    <!-- Bottom content -->
+    <!-- Bottom content — independent section, standard responsive CSS -->
     <section class="bottom">
       <div class="bottom__content">
         <div class="bottom__series">
@@ -59,7 +61,7 @@ document.querySelector('#app').innerHTML = `
         <p class="bottom__description">Blip Creative is a design studio that turns curious minds into bold digital experiences. We make design feel alive for brands, products, and the people behind them.</p>
       </div>
 
-      <!-- Vertical logo — bottom right -->
+      <!-- Vertical logo -->
       <div class="logo-vertical">
         <img class="logo-vertical__img" src="${logoVerticalSvg}" alt="Blip Creative" />
       </div>
@@ -67,3 +69,18 @@ document.querySelector('#app').innerHTML = `
 
   </main>
 `;
+
+// Scale the hero stage so it always fills the viewport width exactly,
+// keeping all internal elements (FUTURE text, robot, backgrounds) in sync.
+function scaleHero() {
+  const stage = document.querySelector('.hero-stage');
+  const hero  = document.querySelector('.hero');
+  if (!stage || !hero) return;
+  const scale = window.innerWidth / 1440;
+  stage.style.transform = `scale(${scale})`;
+  // transform: scale doesn't affect layout flow, so we set the hero height manually
+  hero.style.height = `${889 * scale}px`;
+}
+
+scaleHero();
+window.addEventListener('resize', scaleHero);
