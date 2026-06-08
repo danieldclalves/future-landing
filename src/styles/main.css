@@ -156,11 +156,13 @@ html, body {
 }
 
 /* ─── FUTURE text — back (filled, behind robot) ──────── */
+/* Fixed pixel positions — NO individual transforms so they  */
+/* never drift relative to each other when parent scales.    */
+/* Centered in 1440px: (1440 - 1322) / 2 = 59px             */
 
 .future-back {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 59px;
   top: 319px;
   width: 1322px;
   height: 312px;
@@ -174,14 +176,15 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  display: block;
 }
 
 /* ─── Robot + ship floating ──────────────────────────── */
+/* Centered in 1440px: (1440 - 860) / 2 = 290px            */
 
 .robot-scene {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 290px;
   top: 66px;
   width: 860px;
   z-index: 2;
@@ -195,6 +198,7 @@ html, body {
   height: 609px;
   object-fit: contain;
   animation: float var(--float-duration) ease-in-out infinite;
+  display: block;
 }
 
 .robot-floor {
@@ -202,15 +206,16 @@ html, body {
   height: 251px;
   object-fit: contain;
   margin-top: -60px;
+  display: block;
 }
 
 /* ─── FUTURE text — front (outline, over robot) ──────── */
+/* Same left/width as future-back — pixel-perfect overlay  */
 
 .future-front {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 320px;
+  left: 59px;
+  top: 319px;
   width: 1322px;
   height: 312px;
   z-index: 3;
