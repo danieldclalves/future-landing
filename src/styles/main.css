@@ -1,0 +1,361 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Colors */
+  --color-orange-primary: #ED5402;
+  --color-orange-dark: #ED1A02;
+  --color-orange-light: #F69A67;
+  --color-yellow: #EDDD02;
+  --color-white: #ffffff;
+  --color-dark: #14141F;
+  --color-dark-muted: rgba(20, 20, 31, 0.53);
+
+  /* Typography */
+  --font-family: 'Inter', sans-serif;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 48px;
+  --space-2xl: 60px;
+
+  /* Animation */
+  --float-duration: 3s;
+  --float-distance: 18px;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  font-family: var(--font-family);
+  overflow-x: hidden;
+}
+
+#app {
+  width: 100%;
+}
+
+/* ─── LANDING PAGE ───────────────────────────────────── */
+
+.landing {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ─── BACKGROUNDS ────────────────────────────────────── */
+
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bg-gradient-main {
+  background: linear-gradient(
+    to bottom,
+    #ED5402 0%,
+    #ED5402 67.788%,
+    #F69A67 88.462%,
+    #ffffff 100%
+  );
+  height: 889px;
+  top: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+}
+
+.bg-gradient-radial-red {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 210px;
+  height: 679px;
+  background: radial-gradient(
+    ellipse 100% 50% at 50% 50%,
+    rgba(237,26,2,1) 0%,
+    rgba(237,26,2,0.51) 65.865%,
+    rgba(237,26,2,0.12) 79.327%,
+    rgba(246,141,129,0.06) 89.663%,
+    rgba(255,255,255,0) 100%
+  );
+}
+
+.bg-gradient-radial-yellow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 558px;
+  height: 331px;
+  background: radial-gradient(
+    ellipse 100% 50% at 50% 50%,
+    rgba(237,221,2,1) 0%,
+    rgba(237,221,2,0.51) 48.558%,
+    rgba(237,221,2,0.12) 79.327%,
+    rgba(255,255,255,0) 100%
+  );
+}
+
+/* ─── HEADER ─────────────────────────────────────────── */
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 53px 60px 0;
+  z-index: 100;
+}
+
+.logo-top__img {
+  height: 74px;
+  width: auto;
+  /* SVG is dark — invert to white for the orange background */
+  filter: brightness(0) invert(1);
+}
+
+.header__dots {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.header__dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-white);
+  opacity: 0.85;
+}
+
+/* ─── HERO SCENE ─────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 889px;
+}
+
+/* FUTURE text — back (filled) */
+.future-back {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 319px;
+  width: 1322px;
+  height: 312px;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.future-back img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Floating robot + ship */
+.robot-scene {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 66px;
+  width: 860px;
+  height: 860px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.robot-floating {
+  width: 860px;
+  height: 609px;
+  object-fit: contain;
+  animation: float var(--float-duration) ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+.robot-floor {
+  width: 860px;
+  height: 251px;
+  object-fit: contain;
+  margin-top: -60px;
+}
+
+/* FUTURE text — front (outline) */
+.future-front {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 320px;
+  width: 1322px;
+  height: 312px;
+  z-index: 3;
+  pointer-events: none;
+  user-select: none;
+}
+
+.future-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ─── FLOAT ANIMATION ────────────────────────────────── */
+
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(calc(-1 * var(--float-distance))); }
+  100% { transform: translateY(0px); }
+}
+
+/* ─── BOTTOM SECTION ─────────────────────────────────── */
+
+.bottom {
+  position: relative;
+  background: #ffffff;
+  padding: 40px 60px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.bottom__content {
+  flex: 1;
+}
+
+.bottom__series {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  margin-bottom: 12px;
+}
+
+.bottom__blip {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-extrabold);
+  font-size: 79.05px;
+  color: var(--color-dark);
+  letter-spacing: 4.65px;
+  line-height: 1;
+}
+
+.bottom__number {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-black);
+  font-size: 74.286px;
+  color: var(--color-orange-primary);
+  letter-spacing: -1.2381px;
+  line-height: 1;
+}
+
+.bottom__slash {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-light);
+  font-size: 64.381px;
+  color: var(--color-dark-muted);
+  line-height: 1;
+  margin: 0 4px;
+}
+
+.bottom__label {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-regular);
+  font-size: 28.167px;
+  color: var(--color-dark-muted);
+  align-self: flex-end;
+  margin-bottom: 8px;
+}
+
+.bottom__tagline {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-bold);
+  font-size: 30px;
+  color: var(--color-orange-primary);
+  letter-spacing: 1.2px;
+  line-height: normal;
+  margin-bottom: 12px;
+}
+
+.bottom__description {
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-regular);
+  font-size: 24px;
+  color: var(--color-dark-muted);
+  line-height: 32px;
+  max-width: 1170px;
+}
+
+/* ─── VERTICAL LOGO (bottom right) ──────────────────── */
+
+.logo-vertical {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  flex-shrink: 0;
+}
+
+.logo-vertical__img {
+  width: 116px;
+  height: auto;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────── */
+
+@media (max-width: 1440px) {
+  .future-back,
+  .future-front {
+    width: 91.8vw;
+  }
+  .robot-scene {
+    width: 59.7vw;
+  }
+  .robot-floating {
+    width: 100%;
+    height: auto;
+  }
+  .robot-floor {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 24px 24px 0;
+  }
+  .logo-top__name { font-size: 32px; }
+  .logo-top__icon { width: 60px; height: 44px; }
+  .hero { height: auto; min-height: 500px; }
+  .bg-gradient-main { height: 600px; }
+  .bg-gradient-radial-red { top: 140px; height: 400px; }
+  .bg-gradient-radial-yellow { top: 360px; height: 200px; }
+  .future-back,
+  .future-front { top: 200px; height: auto; }
+  .robot-scene { top: 40px; width: 90vw; }
+  .bottom { padding: 24px 24px 80px; flex-direction: column; }
+  .bottom__blip { font-size: 48px; }
+  .bottom__number { font-size: 48px; }
+  .bottom__tagline { font-size: 20px; }
+  .bottom__description { font-size: 16px; line-height: 24px; }
+  .logo-vertical { right: 16px; bottom: 16px; }
+  .logo-vertical__text { font-size: 56px; }
+}
