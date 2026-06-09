@@ -53,32 +53,17 @@ html, body {
 }
 
 /* ─── HERO WRAPPER ───────────────────────────────────── */
-/* Always fills viewport width. Hero height = 100vh (JS). */
-/* Composition may overflow at the bottom — intentional.  */
+/* Fills full viewport width. Height = 889 × scale (JS).  */
+/* Background fills the side gaps when stage is centred.  */
 
 .hero {
   width: 100%;
   overflow: hidden;
   position: relative;
-}
-
-/* ─── HERO STAGE — fixed 1440×889 design canvas ─────── */
-/* JS: scale = vw/1440 (fills full width).                */
-/* Hero height = window.innerHeight (clips bottom).       */
-
-.hero-stage {
-  position: relative;
-  width: 1440px;
-  height: 889px;
-  transform-origin: top left;
-}
-
-/* ─── BACKGROUNDS (inside hero-stage) ───────────────── */
-
-.bg-gradient-main {
-  position: absolute;
-  inset: 0;
-  height: 889px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  /* Gradient on .hero fills side gaps when stage < viewport width */
   background: linear-gradient(
     to bottom,
     #ED5402 0%,
@@ -87,6 +72,23 @@ html, body {
     #ffffff 100%
   );
 }
+
+/* ─── HERO STAGE — fixed 1440×889 design canvas ─────── */
+/* JS: scale = min(vw/1440, vh/800).                      */
+/* Hero height = 889 × scale so gradient reaches white    */
+/* and the full composition is visible (no vertical clip).*/
+
+.hero-stage {
+  position: relative;
+  width: 1440px;
+  height: 889px;
+  flex-shrink: 0;
+  transform-origin: top center;
+}
+
+/* bg-gradient-main is redundant — .hero background covers it.   */
+/* Kept invisible so the HTML node doesn't cause a layout shift. */
+.bg-gradient-main { display: none; }
 
 .bg-gradient-radial-red {
   position: absolute;
