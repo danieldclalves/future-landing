@@ -70,15 +70,28 @@ document.querySelector('#app').innerHTML = `
   </main>
 `;
 
-// Scale the hero stage so it always fills the viewport width exactly,
-// keeping all internal elements (FUTURE text, robot, backgrounds) in sync.
+// Scale the hero stage so it always fits both viewport width and height.
+// At 1920×1080 (or any wide+short screen) the height would overflow if we
+// scaled by width alone. We take the minimum of the two scales and cap at
+// 95 % of the viewport height to keep a small breathing margin at the bottom.
+//
+// The stage uses `transform-origin: top center` and the .hero wrapper uses
+// `display: flex; justify-content: center`, so when the stage is
+// height-limited (narrower than viewport), it stays horizontally centred and
+// the .hero's gradient background fills any side gaps.
 function scaleHero() {
   const stage = document.querySelector('.hero-stage');
   const hero  = document.querySelector('.hero');
   if (!stage || !hero) return;
-  const scale = window.innerWidth / 1440;
+
+  const scaleByWidth  = window.innerWidth  / 1440;
+  const scaleByHeight = window.innerHeight / 889;
+  // Use whichever is smaller — never let the stage overflow the viewport.
+  // 0.95 gives a small bottom breathing-room gap.
+  const scale = Math.min(scaleByWidth, scaleByHeight * 0.95);
+
   stage.style.transform = `scale(${scale})`;
-  // transform: scale doesn't affect layout flow, so we set the hero height manually
+  // transform: scale doesn't affect layout flow, so we set hero height manually.
   hero.style.height = `${889 * scale}px`;
 }
 
@@ -86,20 +99,15 @@ scaleHero();
 window.addEventListener('resize', scaleHero);
 
 // ─── ROBOT FLOAT ANIMATION ────────────────────────────────────────────────
-// Uses requestAnimationFrame + Math.sin/cos evaluated every frame (~60fps).
-// This produces a perfectly smooth, continuous sinusoidal curve —
-// no keyframe interpolation segments, no micro-jitters.
+// Uses requestAnimationFrame + Math.cos evaluated every frame (~60fps).
+// Produces a perfectly smooth, continuous sinusoidal vertical float —
+// no keyframe interpolation segments, no rotation.
 //
-// Y(t)   = (AMPLITUDE/2) · (cos(2πt) − 1)   → 0 at bottom, −60px at top
-// rot(t) = −MAX_ROT · sin(2πt)               → peaks at max velocity points
-//
-// Both functions share the same 't', so translation and rotation are
-// always mathematically in phase.
+// Y(t) = (AMPLITUDE/2) · (cos(2πt) − 1)   → 0 at rest, −60px at peak
 // ─────────────────────────────────────────────────────────────────────────
 
 const PERIOD    = 3400;  // ms — full up-and-down cycle
 const AMPLITUDE = 60;    // px — total vertical travel (0 → −60px)
-const MAX_ROT   = 4;     // degrees — max tilt at peak velocity
 
 let rafStart = null;
 
@@ -114,13 +122,10 @@ function animateRobot(timestamp) {
   const t = (elapsed % PERIOD) / PERIOD;
   const phase = 2 * Math.PI * t;
 
-  // Position: cosine cycle shifted so it starts at 0 (bottom)
+  // Position: cosine cycle starting at rest (0) and rising to −AMPLITUDE
   const y = (AMPLITUDE / 2) * (Math.cos(phase) - 1);
 
-  // Rotation: negative sine — maximum tilt exactly at maximum speed
-  const deg = -MAX_ROT * Math.sin(phase);
-
-  robot.style.transform = `translateY(${y.toFixed(3)}px) rotate(${deg.toFixed(3)}deg)`;
+  robot.style.transform = `translateY(${y.toFixed(3)}px)`;
 
   requestAnimationFrame(animateRobot);
 }
