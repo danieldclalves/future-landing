@@ -84,3 +84,45 @@ function scaleHero() {
 
 scaleHero();
 window.addEventListener('resize', scaleHero);
+
+// ─── ROBOT FLOAT ANIMATION ────────────────────────────────────────────────
+// Uses requestAnimationFrame + Math.sin/cos evaluated every frame (~60fps).
+// This produces a perfectly smooth, continuous sinusoidal curve —
+// no keyframe interpolation segments, no micro-jitters.
+//
+// Y(t)   = (AMPLITUDE/2) · (cos(2πt) − 1)   → 0 at bottom, −60px at top
+// rot(t) = −MAX_ROT · sin(2πt)               → peaks at max velocity points
+//
+// Both functions share the same 't', so translation and rotation are
+// always mathematically in phase.
+// ─────────────────────────────────────────────────────────────────────────
+
+const PERIOD    = 3400;  // ms — full up-and-down cycle
+const AMPLITUDE = 60;    // px — total vertical travel (0 → −60px)
+const MAX_ROT   = 4;     // degrees — max tilt at peak velocity
+
+let rafStart = null;
+
+function animateRobot(timestamp) {
+  const robot = document.querySelector('.robot-floating');
+  if (!robot) return;
+
+  if (rafStart === null) rafStart = timestamp;
+  const elapsed = timestamp - rafStart;
+
+  // Normalised phase: 0 → 1 over one full period
+  const t = (elapsed % PERIOD) / PERIOD;
+  const phase = 2 * Math.PI * t;
+
+  // Position: cosine cycle shifted so it starts at 0 (bottom)
+  const y = (AMPLITUDE / 2) * (Math.cos(phase) - 1);
+
+  // Rotation: negative sine — maximum tilt exactly at maximum speed
+  const deg = -MAX_ROT * Math.sin(phase);
+
+  robot.style.transform = `translateY(${y.toFixed(3)}px) rotate(${deg.toFixed(3)}deg)`;
+
+  requestAnimationFrame(animateRobot);
+}
+
+requestAnimationFrame(animateRobot);

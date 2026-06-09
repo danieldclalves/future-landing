@@ -30,8 +30,7 @@
   --space-xl: 48px;
   --space-2xl: 60px;
 
-  /* Animation */
-  --float-duration: 3.4s;
+  /* Animation driven by JS requestAnimationFrame */
 }
 
 html, body {
@@ -197,8 +196,9 @@ html, body {
   width: 860px;
   height: 609px;
   object-fit: contain;
-  animation: float var(--float-duration) linear infinite;
+  /* animation driven by JS — no CSS animation here */
   display: block;
+  will-change: transform;
 }
 
 .robot-floor {
@@ -223,23 +223,7 @@ html, body {
   user-select: none;
 }
 
-/* ─── FLOAT ANIMATION ────────────────────────────────── */
-/* timing: linear + keyframes seguem curva senoidal        */
-/* Y(t)  = 30·cos(2πt) - 30  →  oscila 0 … -60px         */
-/* rot(t) = -4·sin(2πt)       →  máx no ponto de vel. máx */
-/* Resultado: posição e rotação 100% síncronos e suaves    */
-
-@keyframes float {
-  0%    { transform: translateY(0px)   rotate(0deg);  }
-  12.5% { transform: translateY(-9px)  rotate(-3deg); }
-  25%   { transform: translateY(-30px) rotate(-4deg); }
-  37.5% { transform: translateY(-51px) rotate(-3deg); }
-  50%   { transform: translateY(-60px) rotate(0deg);  }
-  62.5% { transform: translateY(-51px) rotate(3deg);  }
-  75%   { transform: translateY(-30px) rotate(4deg);  }
-  87.5% { transform: translateY(-9px)  rotate(3deg);  }
-  100%  { transform: translateY(0px)   rotate(0deg);  }
-}
+/* Float animation is handled entirely by JS requestAnimationFrame */
 
 /* ─── BOTTOM SECTION ─────────────────────────────────── */
 
