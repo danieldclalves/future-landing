@@ -31,8 +31,7 @@
   --space-2xl: 60px;
 
   /* Animation */
-  --float-duration: 3.2s;
-  --float-distance: 42px;
+  --float-duration: 3.4s;
 }
 
 html, body {
@@ -198,7 +197,7 @@ html, body {
   width: 860px;
   height: 609px;
   object-fit: contain;
-  animation: float var(--float-duration) ease-in-out infinite;
+  animation: float var(--float-duration) linear infinite;
   display: block;
 }
 
@@ -225,19 +224,21 @@ html, body {
 }
 
 /* ─── FLOAT ANIMATION ────────────────────────────────── */
-/* Subindo: inclina levemente p/ cima (rotate negativo)    */
-/* Descendo: inclina levemente p/ baixo (rotate positivo)  */
+/* timing: linear + keyframes seguem curva senoidal        */
+/* Y(t)  = 30·cos(2πt) - 30  →  oscila 0 … -60px         */
+/* rot(t) = -4·sin(2πt)       →  máx no ponto de vel. máx */
+/* Resultado: posição e rotação 100% síncronos e suaves    */
 
 @keyframes float {
-  0%   { transform: translateY(0px)                              rotate(0deg);   }
-  20%  { transform: translateY(calc(var(--float-distance) * -0.6)) rotate(-3deg); }
-  50%  { transform: translateY(calc(var(--float-distance) * -1))   rotate(-1deg); }
-  80%  { transform: translateY(calc(var(--float-distance) * -0.6)) rotate(3deg);  }
-  100% { transform: translateY(0px)                              rotate(0deg);   }
-}
-
-.robot-floating {
-  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  0%    { transform: translateY(0px)   rotate(0deg);  }
+  12.5% { transform: translateY(-9px)  rotate(-3deg); }
+  25%   { transform: translateY(-30px) rotate(-4deg); }
+  37.5% { transform: translateY(-51px) rotate(-3deg); }
+  50%   { transform: translateY(-60px) rotate(0deg);  }
+  62.5% { transform: translateY(-51px) rotate(3deg);  }
+  75%   { transform: translateY(-30px) rotate(4deg);  }
+  87.5% { transform: translateY(-9px)  rotate(3deg);  }
+  100%  { transform: translateY(0px)   rotate(0deg);  }
 }
 
 /* ─── BOTTOM SECTION ─────────────────────────────────── */
