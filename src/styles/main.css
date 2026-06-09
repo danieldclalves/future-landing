@@ -53,17 +53,32 @@ html, body {
 }
 
 /* ─── HERO WRAPPER ───────────────────────────────────── */
-/* Fills full viewport. JS caps scale so height ≤ 95vh.  */
-/* Background fills the side gaps when stage is narrower. */
+/* Always fills viewport width. Hero height = 100vh (JS). */
+/* Composition may overflow at the bottom — intentional.  */
 
 .hero {
   width: 100%;
   overflow: hidden;
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  /* Gradient fills sides when stage doesn't cover full width */
+}
+
+/* ─── HERO STAGE — fixed 1440×889 design canvas ─────── */
+/* JS: scale = vw/1440 (fills full width).                */
+/* Hero height = window.innerHeight (clips bottom).       */
+
+.hero-stage {
+  position: relative;
+  width: 1440px;
+  height: 889px;
+  transform-origin: top left;
+}
+
+/* ─── BACKGROUNDS (inside hero-stage) ───────────────── */
+
+.bg-gradient-main {
+  position: absolute;
+  inset: 0;
+  height: 889px;
   background: linear-gradient(
     to bottom,
     #ED5402 0%,
@@ -72,23 +87,6 @@ html, body {
     #ffffff 100%
   );
 }
-
-/* ─── HERO STAGE — fixed 1440×889 design canvas ─────── */
-/* JS: transform: scale(s); height of .hero = 889*s       */
-/* transform-origin: top center so flex-centered stage    */
-/* scales from its visual center                          */
-
-.hero-stage {
-  position: relative;
-  width: 1440px;
-  height: 889px;
-  flex-shrink: 0;
-  transform-origin: top center;
-}
-
-/* bg-gradient-main is now the .hero background above */
-/* keep a dummy rule so existing HTML doesn't error */
-.bg-gradient-main { display: none; }
 
 .bg-gradient-radial-red {
   position: absolute;
@@ -167,7 +165,7 @@ html, body {
 .future-back {
   position: absolute;
   left: 59px;
-  top: 319px;
+  top: 260px;
   width: 1322px;
   height: 312px;
   z-index: 1;
@@ -188,7 +186,7 @@ html, body {
 .robot-scene {
   position: absolute;
   left: 290px;
-  top: 66px;
+  top: 40px;
   width: 860px;
   z-index: 2;
   display: flex;
@@ -219,7 +217,7 @@ html, body {
 .future-front {
   position: absolute;
   left: 55px;
-  top: 315px;
+  top: 256px;
   width: 1330px;
   height: 320px;
   z-index: 3;

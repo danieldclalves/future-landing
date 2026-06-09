@@ -70,29 +70,35 @@ document.querySelector('#app').innerHTML = `
   </main>
 `;
 
-// Scale the hero stage so it always fits both viewport width and height.
-// At 1920×1080 (or any wide+short screen) the height would overflow if we
-// scaled by width alone. We take the minimum of the two scales and cap at
-// 95 % of the viewport height to keep a small breathing margin at the bottom.
+// Scale the hero stage to always fill the full viewport width.
+// scale = vw / 1440  →  no side margins, composition matches the design.
 //
-// The stage uses `transform-origin: top center` and the .hero wrapper uses
-// `display: flex; justify-content: center`, so when the stage is
-// height-limited (narrower than viewport), it stays horizontally centred and
-// the .hero's gradient background fills any side gaps.
+// Hero height is locked to window.innerHeight so the page never scrolls
+// past the hero. The lava floor may overflow at the bottom at wide/short
+// viewports — that's intentional (user-approved).
+//
+// The bottom section's side padding is kept in sync so its left margin
+// visually aligns with the hero header logo margin (both come from the
+// 60px gutter in the original 1440px design).
 function scaleHero() {
-  const stage = document.querySelector('.hero-stage');
-  const hero  = document.querySelector('.hero');
+  const stage  = document.querySelector('.hero-stage');
+  const hero   = document.querySelector('.hero');
+  const bottom = document.querySelector('.bottom');
   if (!stage || !hero) return;
 
-  const scaleByWidth  = window.innerWidth  / 1440;
-  const scaleByHeight = window.innerHeight / 889;
-  // Use whichever is smaller — never let the stage overflow the viewport.
-  // 0.95 gives a small bottom breathing-room gap.
-  const scale = Math.min(scaleByWidth, scaleByHeight * 0.95);
+  const scale = window.innerWidth / 1440;
 
   stage.style.transform = `scale(${scale})`;
-  // transform: scale doesn't affect layout flow, so we set hero height manually.
-  hero.style.height = `${889 * scale}px`;
+  // Lock hero to viewport height; content is clipped below (overflow: hidden).
+  hero.style.height = `${window.innerHeight}px`;
+
+  // Scale the bottom section's horizontal padding to match the hero gutter.
+  // At 1440 px the design uses 60 px side padding; we scale proportionally.
+  if (bottom) {
+    const sidePad = Math.round(60 * scale);
+    bottom.style.paddingLeft  = `${sidePad}px`;
+    bottom.style.paddingRight = `${sidePad}px`;
+  }
 }
 
 scaleHero();
