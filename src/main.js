@@ -107,9 +107,18 @@ function scaleHero() {
   // white (#fff) and nothing is vertically clipped.
   hero.style.height = `${889 * scale}px`;
 
-  // Keep the bottom section's horizontal padding in sync with the hero gutter.
+  // Align the bottom section's side padding with the FUTURE text edges.
+  //
+  // The stage is flex-centred inside .hero, so its visual left edge sits at:
+  //   (viewportWidth - 1440 × scale) / 2
+  // The FUTURE SVG starts 59 px from the stage's left edge (in stage coords),
+  // so its visual left position is:
+  //   stageLeft + 59 × scale
+  // We use that exact value as both left and right padding so the bottom text
+  // aligns flush with the FUTURE lettering on both sides.
   if (bottom) {
-    const sidePad = Math.round(60 * scale);
+    const stageLeft = (window.innerWidth - 1440 * scale) / 2;
+    const sidePad   = Math.round(stageLeft + 59 * scale);
     bottom.style.paddingLeft  = `${sidePad}px`;
     bottom.style.paddingRight = `${sidePad}px`;
   }
